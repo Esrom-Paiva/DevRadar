@@ -1,9 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose')
 const routes = require('./routes')
+const connect = require('./Utils/ConnectionString')
 
+const ConnectionString = connect.ConnectionString();
 const app = express();
-mongoose.connect('mongodb+srv://devpaiva:devpaiva@cluster0-nhwlp.mongodb.net/week10?retryWrites=true&w=majority',{
+mongoose.connect(ConnectionString,{
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
