@@ -1,121 +1,47 @@
 import React, {useState, useEffect} from 'react';
+import Api from'./Service/Api';
 import './Global.css';
-import './App.css'
-import './SideBar.css'
-import './Main.css'
+import './App.css';
+import './SideBar.css';
+import './Main.css';
+import DevItem from './Componets/DevItem';
+import Devform from './Componets/DevForm';
 
 function App(){
-  const [latitude, setlatitude] = useState('');
-  const [longitude, setlongitude] = useState('');
-  useEffect(()=> {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
+  const [devs, setDevs] = useState([]);
 
-        setlatitude(latitude);
-        setlongitude(longitude);
-      },
-      (err) => {
-        console.log(err);
-      },
-      {
-        timeout: 30000
-      }
-    );
-  },[])
+
+  useEffect(() =>{
+    async function loadDevs(){
+      const response = await Api.get('/devs');
+
+      setDevs(response.data);
+    }
+    loadDevs();
+  },[]);
+
+  async function handleAddDev(data){
+    
+    const response = await Api.post('/devs',data);
+    setDevs([...devs, response.data]);
+  }
+  
   return(
     <div id="app">
       <aside>
         <strong>Cadastrar</strong>
-        <form>
-          <div className = "input-block">
-              <label htmlFor="github_username">Usuário do Github</label>
-              <input name="github_username" id="username_github" required></input>
-            </div>
-            <div className = "input-block">
-              <label htmlFor="techs">Tecnologias</label>
-              <input name="techs" id="techs" required></input>
-            </div>
-
-            <div className="input-group">
-              
-              <div className = "input-block">
-                <label htmlFor="latitude">latitude</label>
-                <input 
-                type ="number"
-                 name="latitude"
-                  id="latitude"
-                   required value = {latitude}
-                   onChange ={event => setlatitude(event.target.value)}
-                   />
-              </div>
-
-              <div className = "input-block">
-                <label htmlFor="longitude">longitude</label>
-                <input type ="number" 
-                name="longitude" 
-                id="longitude" 
-                required value = {longitude}
-                onChange ={event => setlongitude(event.target.value)}
-                />
-              </div>
-            </div>
-            <button type="submit">Salvar</button>
-        </form>
+        <Devform onSubmit = {handleAddDev}/>
       </aside>
+
       <main>
         <ul>
-          <li className ="dev-item">
-            <header>
-              <img src ="https://avatars0.githubusercontent.com/u/43820735?v=4"></img>
-              <div className = "user-info">
-                <strong>Esrom de Paiva</strong>
-                <span>.net, node.js python</span>
-              </div>
-            </header>
-            <p>Desenvolvedor com foco em back-end que as vezes se aventura no front</p>
-            <a href="https://github.com/Esrom-Paiva">Acesso ao perfil no github</a>
-          </li>
-
-          <li className ="dev-item">
-            <header>
-              <img src ="https://avatars0.githubusercontent.com/u/43820735?v=4"></img>
-              <div className = "user-info">
-                <strong>Esrom de Paiva</strong>
-                <span>.net, node.js python</span>
-              </div>
-            </header>
-            <p>Desenvolvedor com foco em back-end que as vezes se aventura no front</p>
-            <a href="https://github.com/Esrom-Paiva">Acesso ao perfil no github</a>
-          </li>
-
-          <li className ="dev-item">
-            <header>
-              <img src ="https://avatars0.githubusercontent.com/u/43820735?v=4" alt="Esrom de Paiva"></img>
-              <div className = "user-info">
-                <strong>Esrom de Paiva</strong>
-                <span>.net, node.js python</span>
-              </div>
-            </header>
-            <p>Desenvolvedor com foco em back-end que as vezes se aventura no front</p>
-            <a href="https://github.com/Esrom-Paiva">Acesso ao perfil no github</a>
-          </li>
-
-          <li className ="dev-item">
-            <header>
-              <img src ="https://avatars0.githubusercontent.com/u/43820735?v=4"></img>
-              <div className = "user-info">
-                <strong>Esrom de Paiva</strong>
-                <span>.net, node.js python</span>
-              </div>
-            </header>
-            <p>Desenvolvedor com foco em back-end que as vezes se aventura no front</p>
-            <a href="https://github.com/Esrom-Paiva">Acesso ao perfil no github</a>
-          </li>
+          {devs.map(dev =>(
+          <DevItem  key = {dev._id} dev = {dev}/>
+          ))}
         </ul>
       </main>
     </div>
-  );
+  )
 }
 
 export default App;

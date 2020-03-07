@@ -18,9 +18,9 @@ module.exports = {
                     $geometry: {
                         type: "Point",
                         coordinates: [longitude, latitude],
-                    }
-                }
-            }
+                    },
+                },
+            },
         });
         return response.json({ devs });
     }
