@@ -1,6 +1,6 @@
 const Dev = require('../models/Dev');
 const ParseStringAsArray = require('../Utils/ParseStringAsArray');
-
+//mobile
 module.exports = {
     async index(request, response){
         
