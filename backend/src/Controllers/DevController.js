@@ -73,5 +73,6 @@ module.exports = {
     async destroy(request, response){
        const { _id } = request.body
        await Dev.deleteOne({_id});
+       return response.json(_id);
     },
 };
