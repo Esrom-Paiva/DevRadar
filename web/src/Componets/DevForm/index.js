@@ -1,18 +1,24 @@
 import React, {useState, useEffect} from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronCircleLeft} from "@fortawesome/free-solid-svg-icons";
 
-function DevForm({ onSubmit}){
+function DevForm({ onSubmit, onUpdate, onCancel, dev }){
+    const [devEditable, setDevEditable] = useState("");
+    const [_id, setId] = useState("");
+    const [name, setName] = useState("");
+    const [avatar_url, setAvatar] = useState("");
     const [github_username, setgithub_username] = useState('');
-    const [techs, settechs] = useState('');
-    const [latitude, setlatitude] = useState('');
-    const [longitude, setlongitude] = useState('');
+    const [techs, setTechs] = useState('');
+    const [latitude, setLatitude] = useState('');
+    const [longitude, setLongitude] = useState('');
 
     useEffect(()=> {
         navigator.geolocation.getCurrentPosition(
           (position) => {
             const { latitude, longitude } = position.coords;
     
-            setlatitude(latitude);
-            setlongitude(longitude);
+            setLatitude(latitude);
+            setLongitude(longitude);
           },
           (err) => {
             console.log(err);
@@ -22,6 +28,18 @@ function DevForm({ onSubmit}){
           }
         );
       },[]);
+      useEffect(() => {
+        if (dev) {
+          setDevEditable(true);
+          setId(dev._id);
+          setgithub_username(dev.github_username);
+          setName(dev.name);
+          setAvatar(dev.avatar_url);
+          setTechs(dev.techs.join(", "));
+          setLatitude(dev.location.coordinates[1]);
+          setLongitude(dev.location.coordinates[0]);
+        }
+      }, [dev]);
 
       async function handleSubmit(e){
         e.preventDefault();
@@ -33,10 +51,34 @@ function DevForm({ onSubmit}){
             longitude,
         });
         setgithub_username('');
-        settechs('');
+        setTechs('');
       }
-
+      async function handleUpdate(e) {
+        e.preventDefault();
+        await onUpdate({
+          _id,
+          avatar_url,
+          name,
+          techs,
+          latitude,
+          longitude
+        });
+        handleCancel();
+      }
+      function handleCancel() {
+        onCancel(true);
+        setDevEditable(false);
+        setId("");
+        setgithub_username("");
+        setName("");
+        setAvatar("");
+        setTechs("");
+      }
     return(
+      <>
+      <div className="d-flex">
+      <FontAwesomeIcon icon={faChevronCircleLeft}></FontAwesomeIcon>
+      </div>
         <form onSubmit={handleSubmit}>
             <div className = "input-block">
                 <label htmlFor="github_username">Usuário do Github</label>
@@ -55,7 +97,7 @@ function DevForm({ onSubmit}){
                 id="techs" 
                 required
                 value = {techs}
-                onChange ={e => settechs(e.target.value)}
+                onChange ={e => setTechs(e.target.value)}
                 />
             </div>
 
@@ -69,7 +111,7 @@ function DevForm({ onSubmit}){
                         id="latitude"
                         required 
                         value = {latitude}
-                        onChange ={e => setlatitude(e.target.value)}
+                        onChange ={e => setLatitude(e.target.value)}
                     />
                 </div>
 
@@ -79,12 +121,13 @@ function DevForm({ onSubmit}){
                         name="longitude" 
                         id="longitude" 
                         required value = {longitude}
-                        onChange ={e => setlongitude(e.target.value)}
+                        onChange ={e => setLongitude(e.target.value)}
                     />
                 </div>
             </div>
             <button type="submit">Salvar</button>
         </form>
+      </>
     )
 }
 export default DevForm;

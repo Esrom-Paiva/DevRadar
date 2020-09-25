@@ -51,3 +51,22 @@ li.de-item header user-info{
     li.dev-item a:hover{
         color: #5a2ea6;
     }
+
+    .user-footer {
+        display: flex;
+        justify-content: space-between;
+      }
+      
+      .user-footer button {
+        cursor: pointer;
+        width: 20px;
+        margin-left: 15px;
+        background: transparent;
+        outline: none;
+        border: 0;
+        transition: color 0.5s;
+        color: aliceblue;
+      }
+      .user-footer button:hover {
+        color: #7d40e7;
+      }
