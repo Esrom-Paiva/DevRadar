@@ -74,22 +74,50 @@ function DevForm({ onSubmit, onUpdate, onCancel, dev }){
         setAvatar("");
         setTechs("");
       }
+
     return(
       <>
-      <div className="d-flex">
-      <FontAwesomeIcon icon={faChevronCircleLeft}></FontAwesomeIcon>
-      </div>
-        <form onSubmit={handleSubmit}>
-            <div className = "input-block">
+        <div className="d-flex">
+          <strong> {devEditable ? "Editar" : "Cadastrar"}</strong>
+          <i title="Cancelar" className={!devEditable ? "d-none" : ""} onClick={handleCancel}>
+            <FontAwesomeIcon icon={faChevronCircleLeft} color="blueviolet"></FontAwesomeIcon>  
+          </i>
+        </div>  
+        <form onSubmit={devEditable ? handleUpdate : handleSubmit }>
+            <div className = {`input-block ${!devEditable ? "" : "d-none"}`}>
                 <label htmlFor="github_username">Usuário do Github</label>
                 <input 
                     name="github_username"
                     id="github_username"
                     required
-                    value = {github_username}
-                    onChange ={e => setgithub_username(e.target.value)}
+                    value={github_username}
+                    disabled={devEditable ? true : false}
+                    onChange={e => setgithub_username(e.target.value)}
                 />
             </div>
+
+            <div className={`input-block ${devEditable ? "" : "d-none"}`}>
+              <label htmlFor="name">Nome</label>
+              <input
+                name="name"
+                id="name"
+                value={name}
+                disabled={devEditable ? false : true}
+                onChange={e => setName(e.target.value)}
+              />
+            </div>
+
+            <div className={`input-block ${devEditable ? "" : "d-none"}`}>
+              <label htmlFor="avatar_url">Avatar</label>
+              <input
+                name="avatar_url"
+                id="avatar_url"
+                value={avatar_url}
+                disabled={devEditable ? false : true}
+                onChange={e => setAvatar(e.target.value)}
+              />
+            </div>
+           
             <div className = "input-block">
                 <label htmlFor="techs">Tecnologias</label>
                 <input

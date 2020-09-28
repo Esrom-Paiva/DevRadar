@@ -10,7 +10,10 @@
 #app main{
     margin-left: 20px;
 }
-
+.d-none {
+    display: none;
+  }
+  
 @media (max-width: 1000px){
     #app{
         flex-direction: column;

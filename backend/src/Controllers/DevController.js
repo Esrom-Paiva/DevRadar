@@ -46,20 +46,21 @@ module.exports = {
         const { _id } = request.params;
         const dev = request.body;
 
-        const techs = parseStringAsArray(dev.techs);
+        const techs = ParseStringAsArray(dev.techs);
 
         const location = {
-
-        type: "Point",
-        coordinates: [dev.longitude, dev.latitude]
+            type: 'Point',
+            coordinates: [dev.longitude, dev.latitude]
         };
-
         
-            dev = await Dev.findByIdAndUpdate({ _id },{
-                ...dev,
-                techs,
-                location
-            });
+        dev = await Dev.findByIdAndUpdate({ _id },{
+            name: dev.name,
+            github_username: dev.github_username,
+            bio: dev.bio,
+            avatar_url: dev.avatar_url,
+            techs,
+            location
+        });
         return response.json(dev);
     },
 

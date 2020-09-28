@@ -29,7 +29,7 @@ function App(){
   async function handleUpdateDev(data){
 
     await Api.put(`/devs/${data._id}`,data);
-    setDevs("");
+    setDev('');
   }
 
   function handleCancelEdit() {
@@ -49,7 +49,6 @@ function App(){
   return(
     <div id="app">
       <aside>
-        <strong>Cadastrar</strong>
         <Devform 
         onSubmit = {handleAddDev}
         onUpdate = {handleUpdateDev}
